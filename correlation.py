@@ -5,8 +5,8 @@ import subprocess
 import numpy
 import os
 
-# seconds to sample audio file for
-sample_time = 500
+# REMOVE: sample_time = 60 # This global variable is no longer needed
+
 # number of points to scan cross correlation over
 span = 150
 # step size (in points) of cross correlation
@@ -19,7 +19,7 @@ threshold = 0.5
 
 # calculate fingerprint
 # Generate file.mp3.fpcalc by "fpcalc -raw -length 500 file.mp3"
-def calculate_fingerprints(filename):
+def calculate_fingerprints(filename, sample_time_param): # Add sample_time_param as a parameter
     if os.path.exists(filename + '.fpcalc'):
         print("Found precalculated fingerprint for %s" % (filename))
         f = open(filename + '.fpcalc', "r")
@@ -27,14 +27,15 @@ def calculate_fingerprints(filename):
         f.close()
     else:
         print("Calculating fingerprint by fpcalc for %s" % (filename))
-        fpcalc_out = str(subprocess.check_output(['fpcalc', '-raw', '-length', str(sample_time), filename])).strip().replace('\\n', '').replace("'", "")
+        # Use sample_time_param in the subprocess call
+        fpcalc_out = str(subprocess.check_output(['fpcalc', '-raw', '-length', str(sample_time_param), filename])).strip().replace('\\n', '').replace("'", "")
 
     fingerprint_index = fpcalc_out.find('FINGERPRINT=') + 12
     # convert fingerprint to list of integers
     fingerprints = list(map(int, fpcalc_out[fingerprint_index:].split(',')))
-    
+
     return fingerprints
-  
+
 # returns correlation between lists
 def correlation(listx, listy):
     if len(listx) == 0 or len(listy) == 0:
@@ -45,14 +46,14 @@ def correlation(listx, listy):
         listx = listx[:len(listy)]
     elif len(listx) < len(listy):
         listy = listy[:len(listx)]
-    
+
     covariance = 0
     for i in range(len(listx)):
         covariance += 32 - bin(listx[i] ^ listy[i]).count("1")
     covariance = covariance / float(len(listx))
-    
+
     return covariance/32
-  
+
 # return cross correlation, with listy offset from listx
 def cross_correlation(listx, listy, offset):
     if offset > 0:
@@ -65,10 +66,10 @@ def cross_correlation(listx, listy, offset):
     if min(len(listx), len(listy)) < min_overlap:
         # Error checking in main program should prevent us from ever being
         # able to get here.
-        return 
+        return
     #raise Exception('Overlap too small: %i' % min(len(listx), len(listy)))
     return correlation(listx, listy)
-  
+
 # cross correlate listx and listy with offsets from -span to span
 def compare(listx, listy, span, step):
     if span > min(len(listx), len(listy)):
@@ -81,7 +82,7 @@ def compare(listx, listy, span, step):
     for offset in numpy.arange(-span, span + 1, step):
         corr_xy.append(cross_correlation(listx, listy, offset))
     return corr_xy
-  
+
 # return index of maximum value in list
 def max_index(listx):
     max_index = 0
@@ -91,7 +92,7 @@ def max_index(listx):
             max_value = value
             max_index = i
     return max_index
-  
+
 def get_max_corr(corr, source, target):
     max_corr_index = max_index(corr)
     max_corr_offset = -span + max_corr_index * step
@@ -103,9 +104,10 @@ def get_max_corr(corr, source, target):
         print('Match with correlation of %.2f%% at offset %i'
              % (corr[max_corr_index] * 100.0, max_corr_offset))
 
-def correlate(source, target):
-    fingerprint_source = calculate_fingerprints(source)
-    fingerprint_target = calculate_fingerprints(target)
+def correlate(source, target, sample_time_param): # Add sample_time_param as a parameter
+    # Pass sample_time_param to calculate_fingerprints
+    fingerprint_source = calculate_fingerprints(source, sample_time_param)
+    fingerprint_target = calculate_fingerprints(target, sample_time_param)
 
     corr = compare(fingerprint_source, fingerprint_target, span, step)
     max_corr_offset = get_max_corr(corr, source, target)
