@@ -25,7 +25,7 @@ Command-line Options
 
 The script accepts the following command-line options:
 
-(You can format this section as a table if you wish) Option: --source-file Alias: -i Argument Type: string Default: None Description: Source audio file for comparison. Required if --live-stream is not used.
+Option: --source-file Alias: -i Argument Type: string Default: None Description: Source audio file for comparison. Required if --live-stream is not used.
 
 Option: --target-file Alias: -o Argument Type: string Default: None Description: Target audio file for comparison. Required if --live-stream is not used.
 
@@ -48,25 +48,25 @@ The script compares audio fingerprints to find similarities. This can be between
 
 Compares two local audio files. By default, it samples 60 seconds from each.
 
-$ ./compare.py -i file1.mp3 -o file2.mp3 Comparison mode: Source 'file1.mp3', Target 'file2.mp3'. Sample: 60s, Delay: 0s. Calculating fingerprint by fpcalc for file1.mp3 (sample time: 60s) Calculating fingerprint by fpcalc for file2.mp3 (sample time: 60s) --- Correlation Result --- File A: file1.mp3 File B: file2.mp3 Match: Similarity of 63.74% at offset 55 (Internal Threshold: 50.00%)
+```$ ./compare.py -i file1.mp3 -o file2.mp3 Comparison mode: Source 'file1.mp3', Target 'file2.mp3'. Sample: 60s, Delay: 0s. Calculating fingerprint by fpcalc for file1.mp3 (sample time: 60s) Calculating fingerprint by fpcalc for file2.mp3 (sample time: 60s) --- Correlation Result --- File A: file1.mp3 File B: file2.mp3 Match: Similarity of 63.74% at offset 55 (Internal Threshold: 50.00%)```
 
 ### Specifying Sample Time (`-s`, `--sample-time`)
 
 Control the duration (in seconds) of audio to be fingerprinted from each source.
 
-$ ./compare.py -i file1.mp3 -o file2.mp3 -s 30 Comparison mode: Source 'file1.mp3', Target 'file2.mp3'. Sample: 30s, Delay: 0s. Calculating fingerprint by fpcalc for file1.mp3 (sample time: 30s) Calculating fingerprint by fpcalc for file2.mp3 (sample time: 30s) --- Correlation Result --- File A: file1.mp3 File B: file2.mp3 Match: Similarity of [XX.XX]% at offset [YY] (Internal Threshold: 50.00%)
+```$ ./compare.py -i file1.mp3 -o file2.mp3 -s 30 Comparison mode: Source 'file1.mp3', Target 'file2.mp3'. Sample: 30s, Delay: 0s. Calculating fingerprint by fpcalc for file1.mp3 (sample time: 30s) Calculating fingerprint by fpcalc for file2.mp3 (sample time: 30s) --- Correlation Result --- File A: file1.mp3 File B: file2.mp3 Match: Similarity of [XX.XX]% at offset [YY] (Internal Threshold: 50.00%)```
 
 ### Live Stream Loop Check (`-l`, `--live-stream`)
 
 Analyzes a single audio source (e.g., a local file or an HLS stream URL) by comparing it against itself after a delay. This is useful for detecting looping audio.
 
-$ ./compare.py -l https://your-stream-url.m3u8 -s 45 Live stream mode: Using 'https://your-stream-url.m3u8' as both source and target. Sample: 45s, Delay: 5s. HLS stream detected: https://your-stream-url.m3u8. Processing with ffmpeg for 45 seconds. Executing ffmpeg: ffmpeg -y -i https://your-stream-url.m3u8 -t 45 -vn -acodec pcm_s16le -ar 44100 -ac 1 /tmp/tmpxxxxxxx.wav ffmpeg successfully processed HLS stream into /tmp/tmpxxxxxxx.wav Calculating fingerprint using fpcalc for HLS temp file (from https://your-stream-url.m3u8) Live stream mode: Delaying for 5 seconds before next fingerprint capture... Recalculating fingerprint for https://your-stream-url.m3u8 after delay. HLS stream detected: https://your-stream-url.m3u8. Processing with ffmpeg for 45 seconds. Executing ffmpeg: ffmpeg -y -i https://your-stream-url.m3u8 -t 45 -vn -acodec pcm_s16le -ar 44100 -ac 1 /tmp/tmpyyyyyyy.wav ffmpeg successfully processed HLS stream into /tmp/tmpyyyyyyy.wav Calculating fingerprint using fpcalc for HLS temp file (from https://your-stream-url.m3u8) --- Correlation Result --- File A: https://your-stream-url.m3u8 File B: https://your-stream-url.m3u8 Match: Similarity of [ZZ.ZZ]% at offset [WW] (Internal Threshold: 50.00%)
+```$ ./compare.py -l https://your-stream-url.m3u8 -s 45 Live stream mode: Using 'https://your-stream-url.m3u8' as both source and target. Sample: 45s, Delay: 5s. HLS stream detected: https://your-stream-url.m3u8. Processing with ffmpeg for 45 seconds. Executing ffmpeg: ffmpeg -y -i https://your-stream-url.m3u8 -t 45 -vn -acodec pcm_s16le -ar 44100 -ac 1 /tmp/tmpxxxxxxx.wav ffmpeg successfully processed HLS stream into /tmp/tmpxxxxxxx.wav Calculating fingerprint using fpcalc for HLS temp file (from https://your-stream-url.m3u8) Live stream mode: Delaying for 5 seconds before next fingerprint capture... Recalculating fingerprint for https://your-stream-url.m3u8 after delay. HLS stream detected: https://your-stream-url.m3u8. Processing with ffmpeg for 45 seconds. Executing ffmpeg: ffmpeg -y -i https://your-stream-url.m3u8 -t 45 -vn -acodec pcm_s16le -ar 44100 -ac 1 /tmp/tmpyyyyyyy.wav ffmpeg successfully processed HLS stream into /tmp/tmpyyyyyyy.wav Calculating fingerprint using fpcalc for HLS temp file (from https://your-stream-url.m3u8) --- Correlation Result --- File A: https://your-stream-url.m3u8 File B: https://your-stream-url.m3u8 Match: Similarity of [ZZ.ZZ]% at offset [WW] (Internal Threshold: 50.00%)``` 
 
 ### Custom Delay for Live Stream (`--delay`)
 
 Specify a custom delay (in seconds) between samples when using the live stream mode. The default is 5 seconds.
 
-$ ./compare.py -l file_looping.mp3 -s 60 --delay 10 Live stream mode: Using 'file_looping.mp3' as both source and target. Sample: 60s, Delay: 10s. Calculating fingerprint by fpcalc for file_looping.mp3 (sample time: 60s) Live stream mode: Delaying for 10 seconds before next fingerprint capture... Recalculating fingerprint for file_looping.mp3 after delay. Calculating fingerprint by fpcalc for file_looping.mp3 (sample time: 60s) ...
+```$ ./compare.py -l file_looping.mp3 -s 60 --delay 10 Live stream mode: Using 'file_looping.mp3' as both source and target. Sample: 60s, Delay: 10s. Calculating fingerprint by fpcalc for file_looping.mp3 (sample time: 60s) Live stream mode: Delaying for 10 seconds before next fingerprint capture... Recalculating fingerprint for file_looping.mp3 after delay. Calculating fingerprint by fpcalc for file_looping.mp3 (sample time: 60s) ...``` 
 
 ### Nagios Compatibility (`-w`, `-c`)
 
@@ -79,13 +79,13 @@ For integration with monitoring systems like Nagios, you can set warning (`-w` o
 
 Both `-w` and `-c` must be specified together, and the warning threshold must be less than the critical threshold.
 
-$ ./compare.py -i fileA.mp3 -o fileB.mp3 -s 60 -w 75.0 -c 90.0 Comparison mode: Source 'fileA.mp3', Target 'fileB.mp3'. Sample: 60s, Delay: 0s. Calculating fingerprint by fpcalc for fileA.mp3 (sample time: 60s) Calculating fingerprint by fpcalc for fileB.mp3 (sample time: 60s) --- Correlation Result --- File A: fileA.mp3 File B: fileB.mp3 Match: Similarity of 80.00% at offset 10 (Internal Threshold: 50.00%) WARNING: Similarity is 80.00% (Threshold: >=75.0%) |'similarity'=80.00;75.0;90.0;0;100 $ echo $? 1
+```$ ./compare.py -i fileA.mp3 -o fileB.mp3 -s 60 -w 75.0 -c 90.0 Comparison mode: Source 'fileA.mp3', Target 'fileB.mp3'. Sample: 60s, Delay: 0s. Calculating fingerprint by fpcalc for fileA.mp3 (sample time: 60s) Calculating fingerprint by fpcalc for fileB.mp3 (sample time: 60s) --- Correlation Result --- File A: fileA.mp3 File B: fileB.mp3 Match: Similarity of 80.00% at offset 10 (Internal Threshold: 50.00%) WARNING: Similarity is 80.00% (Threshold: >=75.0%) |'similarity'=80.00;75.0;90.0;0;100 $ echo $? 1``` 
 
 ### Swapped Order Example
 
 Comparing `file2.mp3` against `file1.mp3` (swapped from the first example) might result in a negative offset for the same match:
 
-$ ./compare.py -i file2.mp3 -o file1.mp3 Comparison mode: Source 'file2.mp3', Target 'file1.mp3'. Sample: 60s, Delay: 0s. Calculating fingerprint by fpcalc for file2.mp3 (sample time: 60s) Calculating fingerprint by fpcalc for file1.mp3 (sample time: 60s) --- Correlation Result --- File A: file2.mp3 File B: file1.mp3 Match: Similarity of 63.74% at offset -55 (Internal Threshold: 50.00%)
+```$ ./compare.py -i file2.mp3 -o file1.mp3 Comparison mode: Source 'file2.mp3', Target 'file1.mp3'. Sample: 60s, Delay: 0s. Calculating fingerprint by fpcalc for file2.mp3 (sample time: 60s) Calculating fingerprint by fpcalc for file1.mp3 (sample time: 60s) --- Correlation Result --- File A: file2.mp3 File B: file1.mp3 Match: Similarity of 63.74% at offset -55 (Internal Threshold: 50.00%)```
 
 Internals
 ---------
