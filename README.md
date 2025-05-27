@@ -3,8 +3,8 @@ Simple tool to compare audio files
 
 NOTE: This tool was originally found on the internet and ported to Python 3. Several new features have been added since the original port to enhance its functionality, including support for HLS streams, live stream analysis, and Nagios compatibility.
 
--   Original article: <https://shivama205.medium.com/audio-signals-comparison-23e431ed2207> "Audio signals: Comparison"
--   Original scripts: [https://gist.github.com/shivama205/5578f999a9c88112f5d042ebb83e54d5](https://www.google.com/search?q=https://gist.github.com/shivama205/5578f999a9c88112f5d042ebb83e54d5)
+-   Original article: <https://shivama205.medium.com/audio-signals-comparison-23e431ed2207>
+-   Original scripts: <https://github.com/kdave/audio-compare>
 
 Dependencies
 ------------
