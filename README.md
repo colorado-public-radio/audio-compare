@@ -23,21 +23,35 @@ For full functionality, the following command-line tools are required:
 Command-line Options
 --------------------
 
-The script accepts the following command-line options:
+```bash
+$ python3 ./compare.py -h
+usage: compare.py [-h] [-l LIVE_STREAM] [-i SOURCE_FILE] [-o TARGET_FILE]
+                  [-s SAMPLE_TIME] [--delay DELAY] [-w WARN] [-c CRITICAL]
 
-Option: --source-file Alias: -i Argument Type: string Default: None Description: Source audio file for comparison. Required if --live-stream is not used.
+Compare audio files or check a single stream for looping. Optionally outputs
+Nagios-compatible status.
 
-Option: --target-file Alias: -o Argument Type: string Default: None Description: Target audio file for comparison. Required if --live-stream is not used.
-
-Option: --live-stream Alias: -l Argument Type: string Default: None Description: Single audio source (file/URL) for live stream loop check. Mutually exclusive with -i/-o.
-
-Option: --sample-time Alias: -s Argument Type: integer Default: 60 Description: Seconds of audio to sample from each source.
-
-Option: --delay Alias: (none) Argument Type: integer Default: 5 (if -l), 0 (else) Description: Delay in seconds between samples in live stream mode.
-
-Option: --warn Alias: -w Argument Type: float Default: None Description: Nagios warning threshold for similarity percentage (e.g., 70.0). Requires -c.
-
-Option: --critical Alias: -c Argument Type: float Default: None Description: Nagios critical threshold for similarity percentage (e.g., 90.0). Requires -w.
+optional arguments:
+  -h, --help            show this help message and exit
+  -l LIVE_STREAM, --live-stream LIVE_STREAM
+                        Single audio source (file/URL) for live stream loop
+                        check. This option is mutually exclusive with -i and
+                        -o.
+  -i SOURCE_FILE, --source-file SOURCE_FILE
+                        Source file (required if -l is not used).
+  -o TARGET_FILE, --target-file TARGET_FILE
+                        Target file (required if -l is not used).
+  -s SAMPLE_TIME, --sample-time SAMPLE_TIME
+                        Seconds to sample audio file for (default: 60)
+  --delay DELAY         Delay in seconds between fingerprinting attempts in
+                        live stream mode. Defaults to 5 if --live-stream is
+                        used, otherwise 0.
+  -w WARN, --warn WARN  Warning threshold for similarity percentage (e.g., 70
+                        for 70%). Requires -c.
+  -c CRITICAL, --critical CRITICAL
+                        Critical threshold for similarity percentage (e.g., 90
+                        for 90%). Requires -w.
+```
 
 Usage
 -----
